@@ -19,7 +19,11 @@ allowed_origins = [
 CORS(app)  # This will enable CORS for all routes
 
 UPLOAD_FOLDER = 'uploads'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 # Load the fine-tuned model
 model = load_model('fine_tuned_model.keras')
