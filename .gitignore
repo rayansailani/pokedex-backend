@@ -1,0 +1,21 @@
+# Virtual environment
+venv/
+pokenv/
+
+# Python specific
+*.pyc
+__pycache__/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Environment variables
+.env
+
+# Dataset and other large files
+dataset/
+images/
+data/
+
+# Other
+.DS_Store
