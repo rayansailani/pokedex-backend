@@ -13,10 +13,10 @@ app = Flask(__name__)
 allowed_origins = [
     'http://localhost:3000', # for testing
     # add your applications frontend endpoint here.
-    'https://pokedex-frontend-rho.vercel.app'
+    'https://pokedex-frontend-rho.vercel.app/'
 ]
 
-CORS(app, origins=allowed_origins)  # This will enable CORS for all routes
+CORS(app)  # This will enable CORS for all routes
 
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
