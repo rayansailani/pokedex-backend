@@ -13,7 +13,7 @@ app = Flask(__name__)
 allowed_origins = [
     'http://localhost:3000', # for testing
     # add your applications frontend endpoint here.
-    'https://pokedex-frontend-rho.vercel.app/'
+    'https://pokedex-frontend-rho.vercel.app'
 ]
 
 CORS(app)  # This will enable CORS for all routes
@@ -32,16 +32,37 @@ model = load_model('fine_tuned_model.keras')
 le = joblib.load('label_encoder.pkl')
 labels_encoded = np.load('pokemon_labels.npy')
 
+# def find_closest_pokemon(img):
+#     img = img.resize((224, 224))
+#     img_array = image.img_to_array(img)
+#     img_array = np.expand_dims(img_array, axis=0)
+#     img_array = preprocess_input(img_array)
+#     img_features = model.predict(img_array)
+#     distances = np.linalg.norm(labels_encoded - img_features, axis=1)
+#     closest_pokemon_index = np.argmin(distances)
+#     closest_pokemon_label = le.inverse_transform([closest_pokemon_index])[0]
+#     return closest_pokemon_label
+
+
 def find_closest_pokemon(img):
+    # Convert image to RGB if it has an alpha channel
+    if img.mode != 'RGB':
+        img = img.convert('RGB')
+    
+    # Resize the image to match the input shape of the model
     img = img.resize((224, 224))
+    
+    # Convert image to array and preprocess it
     img_array = image.img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
     img_array = preprocess_input(img_array)
-    img_features = model.predict(img_array)
-    distances = np.linalg.norm(labels_encoded - img_features, axis=1)
-    closest_pokemon_index = np.argmin(distances)
-    closest_pokemon_label = le.inverse_transform([closest_pokemon_index])[0]
-    return closest_pokemon_label
+    img_array = np.expand_dims(img_array, axis=0)
+    
+    predictions = model.predict(img_array)
+    predicted_label = np.argmax(predictions, axis=1)[0]
+    pokemon_name = le.inverse_transform([predicted_label])[0]
+    return pokemon_name
+
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
